@@ -6,13 +6,20 @@ public class TouchHandler : MonoBehaviour
 {
    
     Touch _touch;
+    int _counter;
+    Transform _leftArm;
+    Transform _rightArm;
+    GameObject _gameController;
 
     void Start()
     {
-
+        _counter = 0;
+        _leftArm = GameObject.Find("LeftArm").transform;
+        _rightArm = GameObject.Find("RightArm").transform;
+        _gameController = GameObject.Find("GameController");
     }
 
-    void inside()
+    void TouchInputControll()
     {
 
         foreach (Touch touch in Input.touches)
@@ -25,11 +32,14 @@ public class TouchHandler : MonoBehaviour
                 {
                     if (hit.transform.tag.Equals("Right"))
                     {
-                        Debug.Log("Right");
+                        _counter += 1;
+                        //Debug.Log(_counter);
+
                     }
                     if (hit.transform.tag.Equals("Left"))
                     {
-                        Debug.Log("Left");
+                        _counter -= 1;
+                        //Debug.Log(_counter);
                     }
                 }
             }
@@ -38,11 +48,34 @@ public class TouchHandler : MonoBehaviour
 
     }
 
+    void RotateArms()
+    {
+        _leftArm.Rotate(0f, 0f, _counter * 0.01f, Space.World);
+        _rightArm.Rotate(0f, 0f, _counter * 0.01f, Space.World);
+        //Debug.Log(_leftArm.localRotation.eulerAngles.z);
+        //Använd debug.log för att ta reda på start-värde och fick 345.
+
+        if (_leftArm.localRotation.eulerAngles.z <= 5f)  // när z-rotation är 0
+        {   
+            //Debug.Log("Left arm won"); 
+            _gameController.GetComponent<GameController>().VicToryPlayer(true);
+            _gameController.GetComponent<GameController>().EndGame();
+            
+        } // 360 - 345 = 15
+        else if(_leftArm.localRotation.eulerAngles.z <= 330 && _leftArm.localRotation.eulerAngles.z > 300)  // 345-15 = 330
+        {
+            //Debug.Log("Right arm won");
+            _gameController.GetComponent<GameController>().VicToryPlayer(false);
+            _gameController.GetComponent<GameController>().EndGame();
+        }
+    }
+
+
+
 
     void Update()
     {
-        //_touch = Input.GetTouch(0);        
-        //Debug.Log(Camera.main.ScreenToWorldPoint(_touch.position));
-        
+        TouchInputControll();
+        RotateArms();
     }
 }
