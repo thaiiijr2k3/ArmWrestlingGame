@@ -4,20 +4,41 @@ using UnityEngine;
 
 public class TouchHandler : MonoBehaviour
 {
-    GameObject _table;
+   
     Touch _touch;
-    Vector3 touchPosition;
 
     void Start()
     {
-        _table = GameObject.Find("Table");
-        Debug.Log(_table.transform.position);
-        Debug.Log(_table.GetComponent<Renderer>().bounds.min);
-        Debug.Log(_table.GetComponent<Renderer>().bounds.center);
 
     }
 
-    
+    void inside()
+    {
+
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase == TouchPhase.Began)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.tag.Equals("Right"))
+                    {
+                        Debug.Log("Right");
+                    }
+                    if (hit.transform.tag.Equals("Left"))
+                    {
+                        Debug.Log("Left");
+                    }
+                }
+            }
+
+        }
+
+    }
+
+
     void Update()
     {
         //_touch = Input.GetTouch(0);        
