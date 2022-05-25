@@ -8,6 +8,7 @@ TagManager:
   - Left
   - Right
   - Restart
+  - Arm
   layers:
   - Default
   - TransparentFX

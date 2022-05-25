@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class TouchHandler : MonoBehaviour
 {
-   
-    Touch _touch;
+  
     int _counter;
-    Transform _leftArm;
-    Transform _rightArm;
+    GameObject[] _arms;
     GameObject _gameController;
 
     void Start()
     {
         _counter = 0;
-        _leftArm = GameObject.Find("LeftArm").transform;
-        _rightArm = GameObject.Find("RightArm").transform;
+        _arms = GameObject.FindGameObjectsWithTag("Arm");
         _gameController = GameObject.Find("GameController");
     }
 
@@ -33,13 +30,13 @@ public class TouchHandler : MonoBehaviour
                     if (hit.transform.tag.Equals("Right"))
                     {
                         _counter += 1;
-                        //Debug.Log(_counter);
+                        Debug.Log(_counter);
 
                     }
                     if (hit.transform.tag.Equals("Left"))
                     {
                         _counter -= 1;
-                        //Debug.Log(_counter);
+                        Debug.Log(_counter);
                     }
                 }
             }
@@ -50,23 +47,24 @@ public class TouchHandler : MonoBehaviour
 
     void RotateArms()
     {
-        _leftArm.Rotate(0f, 0f, _counter * 0.01f, Space.World);
-        _rightArm.Rotate(0f, 0f, _counter * 0.01f, Space.World);
+        foreach(GameObject arm in _arms)
+        {
+            arm.transform.Rotate(0f, 0f, _counter * 0.1f, Space.World);
+        }
+
         //Debug.Log(_leftArm.localRotation.eulerAngles.z);
         //Använd debug.log för att ta reda på start-värde och fick 345.
 
-        if (_leftArm.localRotation.eulerAngles.z <= 5f)  // när z-rotation är 0
+        if (_arms[0].transform.localRotation.eulerAngles.z <= 5f)  // när z-rotation är 0
         {   
-            //Debug.Log("Left arm won"); 
-            _gameController.GetComponent<GameController>().VicToryPlayer(true);
-            _gameController.GetComponent<GameController>().EndGame();
-            
+            //Debug.Log("Left arm won");            
+            _gameController.GetComponent<GameController>().EndGame(true);
+
         } // 360 - 345 = 15
-        else if(_leftArm.localRotation.eulerAngles.z <= 330 && _leftArm.localRotation.eulerAngles.z > 300)  // 345-15 = 330
+        else if(_arms[0].transform.localRotation.eulerAngles.z <= 330 && _arms[0].transform.localRotation.eulerAngles.z > 300)  // 345-15 = 330
         {
-            //Debug.Log("Right arm won");
-            _gameController.GetComponent<GameController>().VicToryPlayer(false);
-            _gameController.GetComponent<GameController>().EndGame();
+            //Debug.Log("Right arm won");            
+            _gameController.GetComponent<GameController>().EndGame(false);
         }
     }
 

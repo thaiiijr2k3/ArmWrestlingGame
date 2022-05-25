@@ -26,46 +26,26 @@ public class GameController : MonoBehaviour
 
     public void RestartGame()
     {
-        if(Input.touchCount > 0)
-        {
-            Touch _touch = Input.GetTouch(0);
-
-            Ray ray = Camera.main.ScreenPointToRay(_touch.position);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.transform.tag.Equals("Restart"))
-                {
-                    Debug.Log("Starta Om");
-                    SceneManager.LoadScene(0);
-                }
-
-            }
-
-        }
+        SceneManager.LoadScene(0);
 
     }
 
-    public void VicToryPlayer(bool player1)
-    {
-        if (player1 == true)
-            _victoryPlayer.text = "Victory: " + _player1.text;
-        else
-            _victoryPlayer.text = "Victory: " + _player2.text;
-    }
-
-    public void EndGame()
+    public void EndGame(bool player1)
     {
         Time.timeScale = 0;
         _endGameMenu.SetActive(true);
-        
+
+        if (player1 == true)
+            _victoryPlayer.text = "Victory: Player 1" /*+ _player1.text*/;
+        else
+            _victoryPlayer.text = "Victory: Player 2" /*+ _player2.text*/;
+
     }
 
 
     // Update is called once per frame
     void Update()
-    {
-        RestartGame();
+    {    
         
     }
 }
